@@ -1,0 +1,27 @@
+CREATE TABLE Reviewable
+	(ReviewableID int NOT NULL,
+	PRIMARY KEY(ReviewableID));
+
+CREATE TABLE Review
+	(Date DATE,
+	 Username varchar(15) NOT NULL,
+	 Score int,
+	 Description varchar(255),
+	 ReviewableID int NOT NULL,
+	 PRIMARY KEY(Date, Username),
+	 FOREIGN KEY(Username REFERENCES NormalUser(Username),
+	 FOREIGN KEY(ReviewableID REFERENCES Reviewable(ReviewableID));
+		 ON DELETE RESTRICT		ON UPDATE CASCADE
+
+CREATE TABLE CountryLanguage
+	(CountryName varchar(25) NOT NULL,
+	 LanguageName varchar(25) NOT NULL,
+	 PRIMARY KEY(CountryName, LanguageName),
+	 FOREIGN KEY(CountryName REFERENCES Country(Name));
+
+CREATE TABLE CityLanguage
+	(CountryName varchar(25) NOT NULL,
+	 CityName varchar(25) NOT NULL,
+	 LanguageName varchar(25) NOT NULL,
+	 PRIMARY KEY(CountryName, LanguageName),
+	 FOREIGN KEY(CityName REFERENCES City(Name));
