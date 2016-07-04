@@ -1,3 +1,5 @@
+#TEST-> Created by Andrew
+
 CREATE TABLE Location
 (
     Address         TEXT        NOT NULL,
