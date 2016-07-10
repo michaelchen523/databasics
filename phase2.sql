@@ -1,12 +1,11 @@
-DROP DATABASE travelreviews;
 CREATE DATABASE travelreviews;
 USE travelreviews;
 CREATE TABLE Manager
-(Username VARCHAR(15) NOT NULL,
-Email VARCHAR(30) NOT NULL,
-MPassword VARCHAR(15) NOT NULL,
-PRIMARY KEY (Username),
-UNIQUE (Email)
+	(Username VARCHAR(15) NOT NULL,
+	Email VARCHAR(30) NOT NULL,
+	MPassword VARCHAR(15) NOT NULL,
+	PRIMARY KEY (Username),
+	UNIQUE (Email)
 );
 
 CREATE TABLE NormalUser
@@ -14,23 +13,24 @@ CREATE TABLE NormalUser
     Username        VARCHAR(15)    NOT NULL,
     Email           VARCHAR(30)    NOT NULL,
     NPassword        VARCHAR(15)    NOT NULL,
-   
+
     PRIMARY KEY (Username),
-   
+
     UNIQUE(Email)
 );
 
 CREATE TABLE Reviewable
 	(ReviewableID int NOT NULL,
 	PRIMARY KEY(ReviewableID));
-    
+
 CREATE TABLE Country
 	(CoName VARCHAR(50),
 	NUsername VARCHAR(15) NOT NULL,
 	Population INT UNSIGNED NOT NULL,
 
-PRIMARY KEY(CoName),
-FOREIGN KEY(NUsername) REFERENCES NormalUser(Username) ON DELETE RESTRICT ON UPDATE CASCADE
+	PRIMARY KEY(CoName),
+	FOREIGN KEY(NUsername) REFERENCES NormalUser(Username)
+		ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE City
@@ -43,18 +43,22 @@ CREATE TABLE City
 	ReviewableID INT NOT NULL,
 	Capital BOOLEAN NOT NULL,
 
-PRIMARY KEY(CName, CountryName),
-FOREIGN KEY(CountryName) REFERENCES Country(CoName) ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(NUsername) REFERENCES NormalUser(Username) ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(MUsername) REFERENCES Manager(Username) ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(ReviewableID) REFERENCES Reviewable(ReviewableID) ON DELETE RESTRICT ON UPDATE CASCADE
+	PRIMARY KEY(CName, CountryName),
+	FOREIGN KEY(CountryName) REFERENCES Country(CoName)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(NUsername) REFERENCES NormalUser(Username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(MUsername) REFERENCES Manager(Username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(ReviewableID) REFERENCES Reviewable(ReviewableID)
+		ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE Location
 (
     Address         VARCHAR(100)        NOT NULL,
     CityName        VARCHAR(50)    NOT NULL,
-    CountryName     VARCHAR(50)     NOT NULL, 
+    CountryName     VARCHAR(50)     NOT NULL,
     LName           VARCHAR(50)   NOT NULL,
     Cost            INT         NOT NULL,
     LType            ENUM("MUSEUM",
@@ -67,8 +71,8 @@ CREATE TABLE Location
     StudentDiscount BOOL        NOT NULL,
     ReviewableID    INT       NOT NULL,
     NUsername       VARCHAR(15)    NOT NULL,
-   
-   
+
+
     FOREIGN KEY(CityName)      REFERENCES City(CName)               ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY(CountryName)   REFERENCES Country(CoName)            ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY(ReviewableID)  REFERENCES Reviewable(ReviewableID) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -80,33 +84,32 @@ CREATE TABLE Location
 
 
 CREATE TABLE Event
-(
-EName VARCHAR(50) NOT NULL,
-EDate DATE NOT NULL,
-StartTime TIME NOT NULL,
-Address VARCHAR(100) NOT NULL,
-CityName VARCHAR(50) NOT NULL,
-CountryName VARCHAR(50) NOT NULL,
-EndTime TIME,
-Cost INT NOT NULL,
-StudentDiscount TINYINT(1) NOT NULL DEFAULT 0,
-Description TEXT NOT NULL,
-Category ENUM('concert', 'sports match', 'race', 'festival', 'presentation'),
-NUsername VARCHAR(15) NOT NULL,
-ReviewableID int NOT NULL,
+	(EName VARCHAR(50) NOT NULL,
+	EDate DATE NOT NULL,
+	StartTime TIME NOT NULL,
+	Address VARCHAR(100) NOT NULL,
+	CityName VARCHAR(50) NOT NULL,
+	CountryName VARCHAR(50) NOT NULL,
+	EndTime TIME,
+	Cost INT NOT NULL,
+	StudentDiscount TINYINT(1) NOT NULL DEFAULT 0,
+	Description TEXT NOT NULL,
+	Category ENUM('concert', 'sports match', 'race', 'festival', 'presentation'),
+	NUsername VARCHAR(15) NOT NULL,
+	ReviewableID int NOT NULL,
 
-CHECK (StartTime < EndTime),
-FOREIGN KEY(Address) REFERENCES Location(Address)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(CityName) REFERENCES City(CName)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(CountryName) REFERENCES Country(CoName)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(NUsername) REFERENCES NormalUser(Username)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
-FOREIGN KEY(ReviewableID) REFERENCES Reviewable(ReviewableID) 
-	ON DELETE RESTRICT ON UPDATE CASCADE,
-CONSTRAINT EVENTID PRIMARY KEY (EName, EDate, StartTime, Address, CityName, CountryName)
+	CHECK (StartTime < EndTime),
+	FOREIGN KEY(Address) REFERENCES Location(Address)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(CityName) REFERENCES City(CName)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(CountryName) REFERENCES Country(CoName)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(NUsername) REFERENCES NormalUser(Username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	FOREIGN KEY(ReviewableID) REFERENCES Reviewable(ReviewableID)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT EVENTID PRIMARY KEY (EName, EDate, StartTime, Address, CityName, CountryName)
 );
 
 
@@ -136,6 +139,8 @@ CREATE TABLE CityLanguage
 	 LanguageName varchar(25) NOT NULL,
 	 PRIMARY KEY(CountryName, LanguageName),
 	 FOREIGN KEY(CityName) REFERENCES City(CName)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
+	 FOREIGN KEY(CountryName) REFERENCES Country(CoName)
 		ON DELETE RESTRICT	ON UPDATE CASCADE
 );
 
